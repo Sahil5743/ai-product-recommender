@@ -1,12 +1,12 @@
 # AI Product Recommender
 
-A React application that uses the **Anthropic Claude API** to recommend products from a catalog based on natural language user input.
+A React application that uses the **Groq API** to recommend products from a catalog based on natural language user input.
 
 ## Features
 
 - 14-product catalog across phones, laptops, headphones, and smartwatches
 - Natural language preference input (e.g. "phone under $500 with a great camera")
-- Claude-powered AI that reads the full catalog and picks the best matches
+- Groq-powered AI that reads the full catalog and picks the best matches
 - Live product highlighting with a short reason per match
 - Category filtering + "matches only" toggle
 - Quick-prompt chips for common queries
@@ -31,7 +31,7 @@ ai-product-recommender/
     ├── data/
     │   └── products.js            # Product catalog + quick prompts
     ├── hooks/
-    │   └── useRecommendations.js  # Anthropic API integration
+    │   └── useRecommendations.js  # Groq API integration
     └── components/
         ├── ProductCatalog.jsx     # Left panel: filtered product list
         ├── ProductCatalog.module.css
@@ -100,7 +100,7 @@ npm i -g vercel
 vercel
 ```
 
-Set `VITE_ANTHROPIC_API_KEY` in **Project → Settings → Environment Variables**.
+Set `VITE_GROQ_API_KEY` in **Project → Settings → Environment Variables**.
 
 ### Netlify
 
@@ -135,8 +135,8 @@ docker run -p 8080:80 ai-product-recommender
 ## How It Works
 
 1. **User types** a natural language preference in the chat input.
-2. The full product catalog is embedded into the **Claude system prompt**.
-3. **`useRecommendations` hook** sends the user query + catalog to `claude-sonnet-4-20250514` via the Anthropic Messages API.
+2. The full product catalog is embedded into the system prompt sent to the Groq API.
+3. **`useRecommendations` hook** sends the user query + catalog to the Groq Chat Completions endpoint (`https://api.groq.com/openai/v1/chat/completions`) using the `llama-3.3-70b-versatile` model.
 4. Claude returns a **structured JSON** response: `{ message, recommendations: [{ id, reason }] }`.
 5. The app **parses the JSON**, displays the AI message, and highlights matched products with reasons.
 
@@ -166,11 +166,11 @@ Edit `src/data/products.js` to add, remove, or modify products. Each product nee
 |-------|-----------|
 | Frontend | React 18, CSS Modules |
 | Bundler | Vite 5 |
-| AI | Anthropic Claude (claude-sonnet-4-20250514) |
+| AI | Groq (llama-3.3-70b-versatile) |
 | Fonts | Space Grotesk, Inter (Google Fonts) |
 
 ---
 
 ## Security Note
 
-This project calls the Anthropic API directly from the browser using `anthropic-dangerous-direct-browser-access: true`. This is fine for demos and take-home assignments. For production, proxy the API call through your own backend to keep the key secret.
+This project calls the Groq API directly from the browser. Calling any third-party API from client-side code exposes the key to users; this is acceptable for demos but not for production. For production, proxy the API call through your own backend to keep the key secret.

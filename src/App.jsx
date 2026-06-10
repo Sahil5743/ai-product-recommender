@@ -56,7 +56,6 @@ export default function App() {
             <div className={styles.chatHeader}>
               <span className={styles.chatIcon}>✦</span>
               <h2 className={styles.chatTitle}>AI assistant</h2>
-              <span className={styles.poweredBy}>Powered by Claude</span>
             </div>
             <ChatPanel messages={messages} isLoading={isLoading} error={error} />
             <ChatInput onSend={handleSend} isLoading={isLoading} />
